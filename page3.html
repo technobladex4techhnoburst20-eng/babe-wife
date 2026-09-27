@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decrypting... Please Wait</title>
+<link rel="stylesheet" href="style.css">
+<style>
+    /* MOBILE RESPONSIVE STYLES */
+    @media (max-width: 768px) {
+        body { overflow-x: hidden; }
+        .music-player { transform: scale(0.85); top: 5px; right: 5px; }
+        .terminal-window { width: 95% !important; margin-top: 60px !important; border-radius: 8px !important; }
+        .terminal-body { font-size: 12px !important; padding: 10px !important; max-height: 75vh !important; }
+        #hexDump { font-size: 10px !important; word-break: break-all; }
+        .term-btn { width: 90% !important; padding: 10px !important; font-size: 14px !important; }
+    }
+</style>
+</head>
+<body class="terminal">
+
+<div class="music-player">
+  <button class="music-btn" id="musicBtn" onclick="toggleMusic()">🎵</button>
+  <span style="font-size: 0.85rem; color: #555; font-family: sans-serif;">Our Song</span>
+</div>
+<audio id="bgMusic" loop><source src="wife.mp3" type="audio/mpeg"></audio>
+
+<div class="terminal-window">
+  <div class="terminal-titlebar">root@kali: ~ — Decryption Module</div>
+  <div class="terminal-body" id="termBody">
+    <div class="term-line success">> File opened: my_mia.heart</div>
+    <div class="term-line" style="color:var(--term-green-dim); margin-bottom:1rem;">> Running decryption algorithm...</div>
+    <div id="traceLog"></div>
+    <div id="hexDump"></div>
+    <div id="typewriter"></div>
+    <button class="term-btn" id="revealBtn" onclick="goToReveal()">Continue to Reveal →</button>
+  </div>
+</div>
+
+<script>
+// --- MUSIC AUTOPLAY & CONTINUATION LOGIC ---
+const music = document.getElementById('bgMusic');
+const musicBtn = document.getElementById('musicBtn');
+let isPlaying = localStorage.getItem('musicPlaying') === null ? true : localStorage.getItem('musicPlaying') === 'true';
+const savedTime = parseFloat(localStorage.getItem('musicTime'));
+if (!isNaN(savedTime)) music.currentTime = savedTime;
+
+function updateBtn() { musicBtn.textContent = isPlaying ? '🔊' : '🎵'; }
+function toggleMusic() { if (isPlaying) { music.pause(); isPlaying = false; } else { music.play(); isPlaying = true; } localStorage.setItem('musicPlaying', isPlaying); updateBtn(); }
+
+function tryPlayMusic() {
+  if (isPlaying) {
+    music.play().then(() => { localStorage.setItem('musicPlaying', 'true'); updateBtn(); }).catch(() => { musicBtn.style.animation = 'pulse 1s infinite'; });
+  }
+}
+window.addEventListener('load', tryPlayMusic);
+const startAudio = () => { if (music.paused && isPlaying) tryPlayMusic(); document.removeEventListener('click', startAudio); document.removeEventListener('touchstart', startAudio); document.removeEventListener('keydown', startAudio); };
+document.addEventListener('click', startAudio);
+document.addEventListener('touchstart', startAudio);
+document.addEventListener('keydown', startAudio);
+
+setInterval(() => { if (!music.paused) localStorage.setItem('musicTime', music.currentTime); }, 1000);
+window.addEventListener('beforeunload', () => { if (!music.paused) localStorage.setItem('musicTime', music.currentTime); });
+const style = document.createElement('style'); style.textContent = `@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }`; document.head.appendChild(style);
+
+// --- TYPING SOUND EFFECT ---
+let audioCtx;
+function playBlip() { if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); o.frequency.value = 600 + Math.random() * 400; o.type = 'square'; g.gain.setValueAtTime(0.02, audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05); o.start(audioCtx.currentTime); o.stop(audioCtx.currentTime + 0.05); }
+
+// --- PAGE LOGIC ---
+const termBody = document.getElementById('termBody'); const traceLog = document.getElementById('traceLog');
+const hexDump = document.getElementById('hexDump'); const tw = document.getElementById('typewriter'); const btn = document.getElementById('revealBtn');
+
+// 1. IP Trace Sequence
+const traceSequence = [
+  "> Initializing target trace...", "> Pinging 192.168.1.1...", "> [ OK ] Response received.",
+  "> Tracing IP route... 3 hops detected.", "> Locating target coordinates...",
+  "> Country: Thailand 🇹🇭", "> City: [REDACTED]", "> Target identified: My Wife <span class='heart-glow'>❤</span>",
+  "> Accessing heart memory banks..."
+];
+let traceIndex = 0;
+
+function showTrace() {
+  if (traceIndex < traceSequence.length) {
+    playBlip();
+    const div = document.createElement('div'); div.className = 'term-line'; div.style.color = '#008f11';
+    div.innerHTML = traceSequence[traceIndex]; traceLog.appendChild(div); termBody.scrollTop = termBody.scrollHeight;
+    traceIndex++; setTimeout(showTrace, 300);
+  } else {
+    startHexDump();
+  }
+}
+
+// 2. Hex Dump
+function startHexDump() {
+  let hexCount = 0;
+  const hexInterval = setInterval(() => {
+    if (hexCount < 4) {
+      playBlip();
+      let hexLine = "0x" + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0') + "  ";
+      for(let i=0; i<8; i++) hexLine += Math.floor(Math.random()*256).toString(16).padStart(2, '0') + " ";
+      const div = document.createElement('div'); div.className = 'term-line'; div.style.color = '#008f11'; div.textContent = hexLine;
+      hexDump.appendChild(div); termBody.scrollTop = termBody.scrollHeight; hexCount++;
+    } else {
+      clearInterval(hexInterval);
+      startTypewriter();
+    }
+  }, 200);
+}
+
+// 3. Typewriter
+function startTypewriter() {
+  const text = `System was offline for 10 days.\nReason: Upgrading hardware and software.\nBuilding an empire for my wife.\nDecryption complete.`;
+  let charIndex = 0;
+  function typeWriter() {
+    if (charIndex < text.length) {
+      if (charIndex % 2 === 0) playBlip(); // Typing sound for every 2 characters
+      const char = text[charIndex]; if (char === '\n') tw.innerHTML += '<br>'; else tw.innerHTML += char; charIndex++;
+      let speed = 35; if (char === '.') speed = 300; if (char === ' ') speed = 25; if (char === '\n') speed = 200;
+      termBody.scrollTop = termBody.scrollHeight; setTimeout(typeWriter, speed);
+    } else {
+      tw.innerHTML += '<br><br><span style="color:#ff6b9d; text-shadow: 0 0 10px #ff6b9d;">> Decryption successful. <span class="heart-glow">💗</span></span>';
+      setTimeout(() => { btn.classList.add('show'); termBody.scrollTop = termBody.scrollHeight; }, 500);
+    }
+  } typeWriter();
+}
+
+function goToReveal() {
+  // Force music to play and save exact time before leaving
+  localStorage.setItem('musicPlaying', 'true');
+  if (!music.paused) localStorage.setItem('musicTime', music.currentTime);
+  document.body.classList.add('glitch-out');
+  setTimeout(() => window.location.href = 'page4.html', 600);
+}
+
+// Start the sequence
+setTimeout(showTrace, 1000);
+
+const gestures = ['>_', '[OK]', '0x1A', 'sudo', 'decrypt', 'cat ', 'ls -la', './run', 'ping', 'ssh', '❤'];
+function createGesture() { const g = document.createElement('div'); g.className = 'gesture'; g.textContent = gestures[Math.floor(Math.random() * gestures.length)]; g.style.left = Math.random() * 100 + 'vw'; g.style.top = '100vh'; g.style.fontSize = (Math.random() * 14 + 12) + 'px'; g.style.animationDuration = (Math.random() * 4 + 4) + 's'; document.body.appendChild(g); setTimeout(() => g.remove(), 8000); }
+setInterval(createGesture, 400);
+</script>
+</body>
+</html>

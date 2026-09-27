@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Access Required</title>
+<link rel="stylesheet" href="style.css">
+<style>
+    /* MOBILE RESPONSIVE STYLES */
+    @media (max-width: 768px) {
+        body { overflow-x: hidden; }
+        .music-player { transform: scale(0.85); top: 5px; right: 5px; }
+        .terminal-window { width: 95% !important; margin-top: 60px !important; border-radius: 8px !important; }
+        .terminal-body { font-size: 12px !important; padding: 10px !important; max-height: 70vh !important; }
+        .term-line { word-wrap: break-word; }
+        input#passInput { width: 80% !important; }
+    }
+</style>
+</head>
+<body class="terminal">
+
+<div class="music-player">
+  <button class="music-btn" id="musicBtn" onclick="toggleMusic()">🎵</button>
+  <span style="font-size: 0.85rem; color: #555; font-family: sans-serif;">Our Song</span>
+</div>
+<audio id="bgMusic" loop><source src="wife.mp3" type="audio/mpeg"></audio>
+
+<div class="terminal-window">
+  <div class="terminal-titlebar">root@kali: ~ — Secure Shell Access</div>
+  <div class="terminal-body" id="termBody"></div>
+</div>
+
+<script>
+// --- MUSIC AUTOPLAY & CONTINUATION LOGIC ---
+const music = document.getElementById('bgMusic');
+const musicBtn = document.getElementById('musicBtn');
+let isPlaying = localStorage.getItem('musicPlaying') === null ? true : localStorage.getItem('musicPlaying') === 'true';
+const savedTime = parseFloat(localStorage.getItem('musicTime'));
+if (!isNaN(savedTime)) music.currentTime = savedTime;
+
+function updateBtn() { musicBtn.textContent = isPlaying ? '🔊' : '🎵'; }
+function toggleMusic() {
+  if (isPlaying) { music.pause(); isPlaying = false; }
+  else { music.play(); isPlaying = true; }
+  localStorage.setItem('musicPlaying', isPlaying);
+  updateBtn();
+}
+
+function tryPlayMusic() {
+  if (isPlaying) {
+    music.play().then(() => {
+      localStorage.setItem('musicPlaying', 'true');
+      updateBtn();
+    }).catch(() => {
+      musicBtn.style.animation = 'pulse 1s infinite';
+    });
+  }
+}
+
+window.addEventListener('load', tryPlayMusic);
+// Force play on first interaction to bypass mobile browser autoplay restrictions
+const startAudio = () => {
+  if (music.paused && isPlaying) tryPlayMusic();
+  document.removeEventListener('click', startAudio);
+  document.removeEventListener('touchstart', startAudio);
+  document.removeEventListener('keydown', startAudio);
+};
+document.addEventListener('click', startAudio);
+document.addEventListener('touchstart', startAudio);
+document.addEventListener('keydown', startAudio);
+
+setInterval(() => { if (!music.paused) localStorage.setItem('musicTime', music.currentTime); }, 1000);
+window.addEventListener('beforeunload', () => { if (!music.paused) localStorage.setItem('musicTime', music.currentTime); });
+const style = document.createElement('style'); style.textContent = `@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }`; document.head.appendChild(style);
+
+// --- TYPING SOUND EFFECT ---
+let audioCtx;
+function playBlip() {
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+  o.connect(g); g.connect(audioCtx.destination);
+  o.frequency.value = 600 + Math.random() * 400; o.type = 'square';
+  g.gain.setValueAtTime(0.02, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+  o.start(audioCtx.currentTime); o.stop(audioCtx.currentTime + 0.05);
+}
+
+// --- TERMINAL LOGIC ---
+const bootSequence = ["[ OK ] Starting Initialize Secure Shell Connection...","[ OK ] Connecting to server [127.0.0.1:22]...","[ OK ] Connection established.","[ ! ] WARNING: Unauthorized access is prohibited.","[ ! ] WARNING: This system is protected by true love. <span class='heart-glow'>❤</span>","Enter password to decrypt system:"];
+const termBody = document.getElementById('termBody'); let lineIndex = 0;
+
+function showNextLine() {
+  if (lineIndex >= bootSequence.length) {
+    const inputRow = document.createElement('div'); inputRow.className = 'input-row';
+    inputRow.innerHTML = `<input type="password" id="passInput" placeholder="..." autofocus><span class="cursor"></span>`;
+    termBody.appendChild(inputRow); const input = document.getElementById('passInput'); input.focus();
+    input.addEventListener('keydown', (e) => { playBlip(); if (e.key === 'Enter') checkPassword(); }); return;
+  }
+  playBlip();
+  const div = document.createElement('div'); div.className = 'term-line'; div.innerHTML = bootSequence[lineIndex];
+  if (lineIndex < 3) div.classList.add('success'); termBody.appendChild(div);
+  termBody.scrollTop = termBody.scrollHeight; lineIndex++; setTimeout(showNextLine, 150);
+}
+
+function checkPassword() {
+  const input = document.getElementById('passInput');
+  if (input.value.trim().toLowerCase() === 'mia') {
+    input.disabled = true; playBlip();
+    const lines = ["", "Verifying credentials...", "ACCESS GRANTED.", "Welcome back, operator.", "Redirecting to file system..."];
+    let i = 0;
+    function showLine() {
+      if (i >= lines.length) { document.body.classList.add('glitch-out'); setTimeout(() => window.location.href = 'page2.html', 600); return; }
+      playBlip();
+      const div = document.createElement('div'); div.className = 'term-line' + (i === 2 || i === 3 ? ' success' : '');
+      div.textContent = lines[i]; termBody.appendChild(div); termBody.scrollTop = termBody.scrollHeight; i++; setTimeout(showLine, 200);
+    } showLine();
+  } else {
+    input.value = ''; const errDiv = document.createElement('div'); errDiv.className = 'term-line error'; errDiv.textContent = 'ACCESS DENIED. Try again.';
+    termBody.appendChild(errDiv); input.style.color = '#39ff14'; setTimeout(() => { input.style.color = ''; }, 500);
+  }
+}
+
+const gestures = ['>_', '[OK]', '0x1A', 'sudo', 'decrypt', 'cat ', 'ls -la', './run', 'ping', 'ssh', '❤'];
+function createGesture() { const g = document.createElement('div'); g.className = 'gesture'; g.textContent = gestures[Math.floor(Math.random() * gestures.length)]; g.style.left = Math.random() * 100 + 'vw'; g.style.top = '100vh'; g.style.fontSize = (Math.random() * 14 + 12) + 'px'; g.style.animationDuration = (Math.random() * 4 + 4) + 's'; document.body.appendChild(g); setTimeout(() => g.remove(), 8000); }
+setInterval(createGesture, 400);
+showNextLine();
+</script>
+</body>
+</html>

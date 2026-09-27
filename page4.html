@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Mia 💗</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
+<style>
+    html, body { width: 100%; min-height: 100vh; margin: 0; padding: 0; }
+    body.cute {
+        background: #0a0a0a !important;
+        color: #fff !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center; /* Centers perfectly */
+        width: 100%;
+        box-sizing: border-box;
+        padding: 4rem 1rem;
+        text-align: center;
+        overflow-x: hidden;
+    }
+    .cute-container { width: 100%; max-width: 800px; box-sizing: border-box; z-index: 10; }
+
+    /* MOBILE RESPONSIVE STYLES */
+    @media (max-width: 768px) {
+        body.cute { padding: 2rem 1rem !important; justify-content: flex-start; }
+        .music-player { transform: scale(0.85); top: 5px; right: 5px; }
+        .polaroid { padding: 0.5rem !important; }
+        .polaroid img { width: 150px !important; height: 150px !important; }
+        .cute-title { font-size: 1.8rem !important; }
+        .cute-sub { font-size: 1rem !important; }
+        .diamond-btn { padding: 0.8rem 1rem !important; font-size: 1rem !important; width: 90% !important; }
+        .love-letter { padding: 1rem !important; font-size: 0.9rem !important; }
+    }
+</style>
+</head>
+<body class="cute">
+
+<div class="music-player">
+  <button class="music-btn" id="musicBtn" onclick="toggleMusic()">🎵</button>
+  <span style="font-size: 0.85rem; color: #555; font-family: sans-serif;">Our Song</span>
+</div>
+<!-- Added 'autoplay' attribute to ensure immediate playback -->
+<audio id="bgMusic" loop autoplay><source src="wife1.mp3" type="audio/mpeg"></audio>
+
+<div class="cute-container">
+  <!-- 🔴 ADD HER PHOTO HERE (e.g., wife.jpeg) 🔴 -->
+  <div class="polaroid">
+    <img src="wife.jpeg" alt="My Mia" onerror="this.src='https://placekitten.com/200/200'">
+    <div class="polaroid-cap">My Wife & My Boss ❤️</div>
+  </div>
+
+  <h1 class="cute-title">You are still my Mia 💕</h1>
+  <p class="cute-sub">The system was never really down.<br>It was just building something better for us. ✨</p>
+  <p class="cute-thai">คุณคือดวงใจของผมเสมอ<br><span style="font-size:0.8rem; color:#888;">(You are always my heart)</span></p>
+
+  <button class="diamond-btn" id="diamondBtn" onclick="revealJoke()">💎 Click for 1,000,000 Free Fire Diamonds</button>
+
+  <div class="joke-reveal" id="jokeReveal">
+    <div id="jokeText"></div>
+    <div class="heart-burst">😎💖💎</div>
+  </div>
+
+  <!-- Kept the Phan Ra Ya text here as requested -->
+  <div class="runaway-container">
+    <p class="runaway-text">(Phan Ra Ya(kon-dii))</p>
+  </div>
+
+  <!-- Love Letter Reveal -->
+  <div class="love-letter" id="loveLetter">
+    <p>System Update: 100% Complete.</p>
+    <p>Even if i don't exist anyway but my soul still finds you, but my heart was always connected to you. Thank you for being my soul light,my wife.</p>
+    <p>I'm building everything just for us and our jr's. I love you more than any diamond in the Free Fire server.</p>
+    <p class="sig">— Forever yours</p>
+  </div>
+
+  <!-- Continue to Page 5 Button -->
+  <button class="diamond-btn" onclick="goToGallery()" style="background: #fff; color: var(--pink); border: 2px solid var(--pink); box-shadow: 0 5px 15px rgba(255,107,157,0.2); margin-top: 1rem;">Continue For Game →</button>
+
+  <div style="height: 50px;"></div>
+</div>
+
+<script>
+// --- MUSIC AUTOPLAY & CONTINUATION LOGIC ---
+const music = document.getElementById('bgMusic');
+const musicBtn = document.getElementById('musicBtn');
+let isPlaying = localStorage.getItem('musicPlaying') === null ? true : localStorage.getItem('musicPlaying') === 'true';
+const savedTime = parseFloat(localStorage.getItem('musicTime'));
+if (!isNaN(savedTime)) music.currentTime = savedTime;
+
+function updateBtn() { musicBtn.textContent = isPlaying ? '🔊' : '🎵'; }
+function toggleMusic() { if (isPlaying) { music.pause(); isPlaying = false; } else { music.play(); isPlaying = true; } localStorage.setItem('musicPlaying', isPlaying); updateBtn(); }
+
+function tryPlayMusic() {
+  if (isPlaying) {
+    music.play().then(() => { localStorage.setItem('musicPlaying', 'true'); updateBtn(); }).catch(() => { musicBtn.style.animation = 'pulse 1s infinite'; });
+  }
+}
+
+// Try to play immediately on script load
+tryPlayMusic();
+window.addEventListener('load', tryPlayMusic);
+
+// Fallback for strict mobile browsers
+const startAudio = () => { if (music.paused && isPlaying) tryPlayMusic(); document.removeEventListener('click', startAudio); document.removeEventListener('touchstart', startAudio); document.removeEventListener('keydown', startAudio); };
+document.addEventListener('click', startAudio);
+document.addEventListener('touchstart', startAudio);
+document.addEventListener('keydown', startAudio);
+
+setInterval(() => { if (!music.paused) localStorage.setItem('musicTime', music.currentTime); }, 1000);
+window.addEventListener('beforeunload', () => { if (!music.paused) localStorage.setItem('musicTime', music.currentTime); });
+const style = document.createElement('style'); style.textContent = `@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }`; document.head.appendChild(style);
+
+// Function to redirect to page5 while saving music state
+function goToGallery() {
+  localStorage.setItem('musicPlaying', 'true');
+  if (!music.paused) localStorage.setItem('musicTime', music.currentTime);
+  window.location.href = 'page5.html';
+}
+
+// --- DIAMOND BUTTON & LOVE LETTER LOGIC ---
+function revealJoke() {
+  const btn = document.getElementById('diamondBtn'); const reveal = document.getElementById('jokeReveal');
+  const text = document.getElementById('jokeText'); const letter = document.getElementById('loveLetter');
+
+  btn.style.transition = 'all 0.5s'; btn.style.transform = 'scale(0.9)'; btn.style.opacity = '0.5';
+  btn.textContent = 'Spawning diamonds...'; btn.disabled = true;
+
+  // Explode with hearts!
+  for(let i=0; i<15; i++) {
+    setTimeout(() => createEmoji(), i * 50);
+  }
+
+  setTimeout(() => {
+    btn.style.opacity = '0'; btn.style.transform = 'scale(0)';
+    setTimeout(() => btn.style.display = 'none', 500);
+    text.textContent = "Error 404: Diamonds not found. 😜\nBut you already have the ultimate loot: ME. 💖";
+    text.style.whiteSpace = 'pre-line'; reveal.classList.add('show');
+
+    setTimeout(() => {
+      letter.classList.add('show');
+      letter.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 2000);
+  }, 1500);
+}
+
+// --- FLOATING EMOJIS ---
+const emojis = ['💗', '✨', '💕', '🌸', '💖', '🐾', '💎'];
+function createEmoji() { const emoji = document.createElement('div'); emoji.className = 'cute-emoji'; emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)]; emoji.style.left = Math.random() * 100 + 'vw'; emoji.style.top = '100vh'; emoji.style.fontSize = (Math.random() * 20 + 16) + 'px'; emoji.style.animationDuration = (Math.random() * 4 + 5) + 's'; document.body.appendChild(emoji); setTimeout(() => emoji.remove(), 9000); }
+setInterval(createEmoji, 800);
+</script>
+</body>
+</html>

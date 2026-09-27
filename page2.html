@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>File System — /home/mia</title>
+<link rel="stylesheet" href="style.css">
+<style>
+    /* MOBILE RESPONSIVE STYLES */
+    @media (max-width: 768px) {
+        body { overflow-x: hidden; }
+        .music-player { transform: scale(0.85); top: 5px; right: 5px; }
+        .terminal-window { width: 95% !important; margin-top: 60px !important; border-radius: 8px !important; }
+        .terminal-body { font-size: 12px !important; padding: 10px !important; max-height: 75vh !important; }
+        .ls-line { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px !important; font-size: 11px; line-height: 1.4; }
+        .ls-perms, .ls-owner, .ls-size, .ls-date { flex-basis: auto; }
+    }
+</style>
+</head>
+<body class="terminal">
+
+<div class="music-player">
+  <button class="music-btn" id="musicBtn" onclick="toggleMusic()">🎵</button>
+  <span style="font-size: 0.85rem; color: #555; font-family: sans-serif;">Our Song</span>
+</div>
+<audio id="bgMusic" loop><source src="wife.mp3" type="audio/mpeg"></audio>
+
+<div class="terminal-window">
+  <div class="terminal-titlebar">root@kali: ~ — File Explorer</div>
+  <div class="terminal-body" id="termBody">
+    <div class="term-line prompt">ls -la /home/mia/</div>
+    <div class="term-line" style="color:var(--term-green-dim); margin-bottom:0.5rem;">total 5 files · 1 hidden directory</div>
+
+    <div class="ls-output" id="fileList">
+      <div class="ls-line" onclick="wrongFile('free_fire.exe', 'bash: ./free_fire.exe: Permission denied')">
+        <span class="ls-perms">-rwxr-xr-x</span> <span class="ls-owner">root</span> <span class="ls-size">2.4M</span> <span class="ls-date">June 16 15:30</span> free_fire.exe
+      </div>
+      <div class="ls-line" onclick="wrongFile('cat_memes.zip', 'bash: unzip: cannot execute binary file')">
+        <span class="ls-perms">-rw-r--r--</span> <span class="ls-owner">root</span> <span class="ls-size">15M</span> <span class="ls-date">August 22 10:00</span> cat_memes.zip
+      </div>
+      <div class="ls-line" onclick="wrongFile('wife_husband.log', 'bash: cat: Permission denied')">
+        <span class="ls-perms">-rw-------</span> <span class="ls-owner">root</span> <span class="ls-size">8.1K</span> <span class="ls-date">September 2 12:00</span> wife_husband.log
+      </div>
+      <div class="ls-line" onclick="wrongFile('My_Phan_Ra_Ya.txt', 'bash: error: No taxes found. Only love.')">
+        <span class="ls-perms">-rw-r--r--</span> <span class="ls-owner">root</span> <span class="ls-size">340K</span> <span class="ls-date">Jan 01 00:00</span> My_Phan_Ra_Ya.txt
+      </div>
+      <div class="ls-line correct" onclick="correctFile()">
+        <span class="ls-perms">-rwxrwxrwx</span> <span class="ls-owner">mia</span> <span class="ls-size">∞</span> <span class="ls-date">July 26 00:00</span> my_mia.heart
+      </div>
+    </div>
+
+    <div id="termOutput" style="margin-top:1rem;"></div>
+  </div>
+</div>
+
+<script>
+// --- MUSIC AUTOPLAY & CONTINUATION LOGIC ---
+const music = document.getElementById('bgMusic');
+const musicBtn = document.getElementById('musicBtn');
+let isPlaying = localStorage.getItem('musicPlaying') === null ? true : localStorage.getItem('musicPlaying') === 'true';
+const savedTime = parseFloat(localStorage.getItem('musicTime'));
+if (!isNaN(savedTime)) music.currentTime = savedTime;
+
+function updateBtn() { musicBtn.textContent = isPlaying ? '🔊' : '🎵'; }
+function toggleMusic() { if (isPlaying) { music.pause(); isPlaying = false; } else { music.play(); isPlaying = true; } localStorage.setItem('musicPlaying', isPlaying); updateBtn(); }
+
+function tryPlayMusic() {
+  if (isPlaying) {
+    music.play().then(() => { localStorage.setItem('musicPlaying', 'true'); updateBtn(); }).catch(() => { musicBtn.style.animation = 'pulse 1s infinite'; });
+  }
+}
+window.addEventListener('load', tryPlayMusic);
+const startAudio = () => { if (music.paused && isPlaying) tryPlayMusic(); document.removeEventListener('click', startAudio); document.removeEventListener('touchstart', startAudio); document.removeEventListener('keydown', startAudio); };
+document.addEventListener('click', startAudio);
+document.addEventListener('touchstart', startAudio);
+document.addEventListener('keydown', startAudio);
+
+setInterval(() => { if (!music.paused) localStorage.setItem('musicTime', music.currentTime); }, 1000);
+window.addEventListener('beforeunload', () => { if (!music.paused) localStorage.setItem('musicTime', music.currentTime); });
+const style = document.createElement('style'); style.textContent = `@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }`; document.head.appendChild(style);
+
+// --- TYPING SOUND EFFECT ---
+let audioCtx;
+function playBlip() { if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); o.frequency.value = 600 + Math.random() * 400; o.type = 'square'; g.gain.setValueAtTime(0.02, audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05); o.start(audioCtx.currentTime); o.stop(audioCtx.currentTime + 0.05); }
+
+// --- PAGE LOGIC ---
+const termBody = document.getElementById('termBody'); const termOutput = document.getElementById('termOutput');
+
+function wrongFile(file, error) {
+  playBlip(); termOutput.innerHTML = '';
+  const div = document.createElement('div'); div.className = 'term-line error'; div.textContent = error;
+  termOutput.appendChild(div); termBody.scrollTop = termBody.scrollHeight;
+}
+
+function correctFile() {
+  playBlip(); termOutput.innerHTML = '';
+  const cmd = document.createElement('div'); cmd.className = 'term-line prompt'; cmd.textContent = 'cat my_mia.heart'; termOutput.appendChild(cmd);
+  const loadDiv = document.createElement('div'); loadDiv.className = 'term-line'; loadDiv.innerHTML = 'Decrypting... <span id="loadPercent">0%</span><div class="progress-bar"><div class="progress-fill" id="loadFill"></div></div>'; termOutput.appendChild(loadDiv);
+  let progress = 0;
+  const interval = setInterval(() => {
+    playBlip(); progress += 10; document.getElementById('loadPercent').textContent = progress + '%'; document.getElementById('loadFill').style.width = progress + '%';
+    if (progress >= 100) { clearInterval(interval); setTimeout(() => { document.body.classList.add('glitch-out'); setTimeout(() => window.location.href = 'page3.html', 600); }, 500); }
+  }, 100);
+}
+
+const gestures = ['>_', '[OK]', '0x1A', 'sudo', 'decrypt', 'cat ', 'ls -la', './run', 'ping', 'ssh', '❤'];
+function createGesture() { const g = document.createElement('div'); g.className = 'gesture'; g.textContent = gestures[Math.floor(Math.random() * gestures.length)]; g.style.left = Math.random() * 100 + 'vw'; g.style.top = '100vh'; g.style.fontSize = (Math.random() * 14 + 12) + 'px'; g.style.animationDuration = (Math.random() * 4 + 4) + 's'; document.body.appendChild(g); setTimeout(() => g.remove(), 8000); }
+setInterval(createGesture, 400);
+</script>
+</body>
+</html>

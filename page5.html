@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Mia 💗</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        html, body { width: 100%; min-height: 100vh; margin: 0; padding: 0; }
+        /* Force Dark Background for this page */
+        body.cute {
+            background: #0a0a0a !important;
+            background-image: none !important;
+            color: #fff !important;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            min-height: 100vh;
+            margin: 0;
+            padding: 4rem 2rem;
+            text-align: center;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            box-sizing: border-box;
+        }
+
+        .cute-title {
+            font-size: clamp(1.8rem, 6vw, 2.8rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff6b9d 0%, #6bb6ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .cute-sub {
+            font-size: 1.1rem;
+            color: #ccc;
+            margin-bottom: 3rem;
+        }
+
+        /* Grid layout for cat GIFs */
+        .cat-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            max-width: 900px;
+            width: 100%;
+            margin-bottom: 3rem;
+        }
+
+        .cat-gif {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 107, 157, 0.4);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            background: #111;
+        }
+
+        /* Reveal Song Button Styles */
+        .reveal-song-btn {
+            margin-top: 2rem;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(135deg, #ff6b9d 0%, #ff3d77 100%);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 107, 157, 0.5);
+            animation: btnPulse 1.5s infinite;
+            transition: transform 0.2s, opacity 0.5s;
+            z-index: 10;
+        }
+        .reveal-song-btn:hover { transform: scale(1.05); }
+        .reveal-song-btn:disabled {
+            animation: none;
+            opacity: 0.8;
+            cursor: default;
+            transform: scale(1);
+            background: #333;
+            box-shadow: none;
+        }
+        @keyframes btnPulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 107, 157, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(255, 107, 157, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 107, 157, 0); }
+        }
+
+        /* Heart Burst Emojis */
+        .cute-emoji {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            user-select: none;
+        }
+
+        /* MOBILE RESPONSIVE STYLES */
+        @media (max-width: 768px) {
+            body.cute { padding: 2rem 0.5rem !important; }
+            .music-player { transform: scale(0.85); top: 5px; right: 5px; }
+            .cute-container { padding: 0 5px !important; width: 100% !important; }
+            .cat-gallery { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)) !important; gap: 1rem !important; }
+            .cute-title { font-size: 1.8rem !important; }
+            .cute-sub { font-size: 1rem !important; }
+            .reveal-song-btn { width: 90% !important; padding: 0.8rem 1rem !important; font-size: 1rem !important; }
+        }
+    </style>
+</head>
+<body class="cute">
+
+    <!-- Music Player Widget -->
+    <div class="music-player">
+      <button class="music-btn" id="musicBtn" onclick="toggleMusic()">🎵</button>
+      <span style="font-size: 0.85rem; color: #555; font-family: sans-serif;">Our Song</span>
+    </div>
+    <!-- Added 'autoplay' attribute to ensure immediate playback -->
+    <audio id="bgMusic" loop autoplay><source src="wife2.mp3" type="audio/mpeg"></audio>
+
+    <div class="cute-container" style="z-index: 10; width: 100%; max-width: 900px;">
+        <h1 class="cute-title">A little gallery for you ❤️</h1>
+        <p class="cute-sub">I know how much you love cats. Here are 15 little moments just to make you smile. You mean everything to me.</p>
+
+        <!-- Cat GIFs Gallery -->
+        <div class="cat-gallery">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdmVsaW5odml0NGRsOGwyeXgwZTAxZm9kOGp0ZjE0OTAyM2FiN3RmeCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/MDJ9IbxxvDUQM/giphy.gif" alt="Cat typing" class="cat-gif" onerror="this.src='https://placekitten.com/200/200'">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdmVsaW5odml0NGRsOGwyeXgwZTAxZm9kOGp0ZjE0OTAyM2FiN3RmeCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/wSxNZ8sksBiV2NVOfq/giphy.gif" alt="Happy cat" class="cat-gif" onerror="this.src='https://placekitten.com/201/201'">
+            <img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3Nm8yNzZpY3VjZGJzZGt1MXZqenQ2b3RudmxzampyeXVqYmJtY2k3ZyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/XOrPrk16PMK99Lt9SC/giphy.gif" alt="Cat with heart" class="cat-gif" onerror="this.src='https://placekitten.com/202/202'">
+            <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExczZqcGpncTd2cTl3bms3ZmE2Yno3dGY3ZjExNTJhMHhjc3RmcGE0MCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/NbhiwA0C8THIv8KvG5/giphy.gif" alt="Peeking cat" class="cat-gif" onerror="this.src='https://placekitten.com/203/203'">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdmVsaW5odmltNGRsOGwyeXgwZTAxZm9kOGp0ZjE0OTAyM2FiN3RmeCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/yFQ0ywscgobJK/giphy.gif" alt="Smiling cat" class="cat-gif" onerror="this.src='https://placekitten.com/204/204'">
+            <img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3dDNvMHNjMDludmlmdjdoYnQ3czlkbzV2b2ZkZW53ZXh0a3U3YWNqMyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/WjHDS6qPeVJnSZITfN/giphy.gif" alt="Dancing cat" class="cat-gif" onerror="this.src='https://placekitten.com/205/205'">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExazRjZng3MGpyazd5c3hveGkwZDJybDlhbG0xejE2bW04b3pmdjF2NyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/L1nM3UcFBiD7Bsor9F/giphy.gif" alt="High five cat" class="cat-gif" onerror="this.src='https://placekitten.com/206/206'">
+            <img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3OHI0MXQyM3NpMGFpdzlmMHB2OTZtYXpjd3hnN2NncWNjemp0OW0wNSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/dvxq3BtNLK6KEgTryW/giphy.gif" alt="Blinking cat" class="cat-gif" onerror="this.src='https://placekitten.com/207/207'">
+            <img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3OHI0MXQyM3NpMGFpdzlmMHB2OTZtYXpjd3hnN2NncWNjemp0OW0wNSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/GAXXHdS0zXawVLOJLY/giphy.gif" alt="Pushing cat" class="cat-gif" onerror="this.src='https://placekitten.com/208/208'">
+            <img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3Y2FnYnZ4bGloZmh3OWFsZDI3Zjd1YzF4Mzg4OXRreXM5ZWh2ZWlibCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/lGBecpB2dIMwt6ohfI/giphy.gif" alt="Sleepy cat" class="cat-gif" onerror="this.src='https://placekitten.com/209/209'">
+            <img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3azI0MHV2eXJsd3VkeDlseWo3b294YXFiaWoyMTg4aTBpMXdhOHJxeiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/aC45M5Q4D07Pq/giphy.gif" alt="Staring cat" class="cat-gif" onerror="this.src='https://placekitten.com/210/210'">
+            <img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3azI0MHV2eXJsd3VkeDlseWo3b294YXFiaWoyMTg4aTBpMXdhOHJxeiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/2qQ3Rn9pAD4YeX3ugZ/giphy.gif" alt="Hugging cat" class="cat-gif" onerror="this.src='https://placekitten.com/211/211'">
+            <img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3cDMwazZ5eGdtc3J0bnJ1ZWR4bjZkMDV6a2Iyd3o2bmN1NjJ6ZDQwdiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/iLflViOHrDhpwCbI7U/giphy.gif" alt="Looking cat" class="cat-gif" onerror="this.src='https://placekitten.com/212/212'">
+            <img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3dDdpMTRlcWwxOWk5eWNvZmIxdDJqOGZmOWltbnNxdGQzdWpnMmhoeSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/6gSoPdYNSLILASEykJ/giphy.gif" alt="Tilted cat" class="cat-gif" onerror="this.src='https://placekitten.com/213/213'">
+            <img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3Nmgzamdtd3BrOXpxeXhjM3M1ajN5Z2pvZmo5NmF4aDhueXFoMnU3cCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/jdGbTIN48oqKDEYxfe/giphy.gif" alt="Tilted cats" class="cat-gif" onerror="this.src='https://placekitten.com/214/214'">
+        </div>
+
+        <!-- Reveal Song Button -->
+        <button class="reveal-song-btn" id="revealSongBtn" onclick="revealSongAndBurst(this)">Press to Reveal Our Song 🎵</button>
+
+        <div style="height: 50px;"></div>
+    </div>
+
+    <script>
+    // --- MUSIC AUTOPLAY & CONTINUATION LOGIC ---
+    const music = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('musicBtn');
+    let isPlaying = localStorage.getItem('musicPlaying') === null ? true : localStorage.getItem('musicPlaying') === 'true';
+    const savedTime = parseFloat(localStorage.getItem('musicTime'));
+    if (!isNaN(savedTime)) music.currentTime = savedTime;
+
+    function updateBtn() { musicBtn.textContent = isPlaying ? '🔊' : '🎵'; }
+    function toggleMusic() {
+      if (isPlaying) { music.pause(); isPlaying = false; }
+      else { music.play(); isPlaying = true; }
+      localStorage.setItem('musicPlaying', isPlaying);
+      updateBtn();
+    }
+
+    function tryPlayMusic() {
+      if (isPlaying) {
+        music.play().then(() => { localStorage.setItem('musicPlaying', 'true'); updateBtn(); }).catch(() => { musicBtn.style.animation = 'pulse 1s infinite'; });
+      }
+    }
+
+    // Try to play immediately on script load
+    tryPlayMusic();
+    window.addEventListener('load', tryPlayMusic);
+
+    // Fallback for strict mobile browsers
+    const startAudio = () => { if (music.paused && isPlaying) tryPlayMusic(); document.removeEventListener('click', startAudio); document.removeEventListener('touchstart', startAudio); document.removeEventListener('keydown', startAudio); };
+    document.addEventListener('click', startAudio);
+    document.addEventListener('touchstart', startAudio);
+    document.addEventListener('keydown', startAudio);
+
+    setInterval(() => { if (!music.paused) localStorage.setItem('musicTime', music.currentTime); }, 1000);
+    window.addEventListener('beforeunload', () => { if (!music.paused) localStorage.setItem('musicTime', music.currentTime); });
+    const style = document.createElement('style'); style.textContent = `@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }`; document.head.appendChild(style);
+
+    // --- REVEAL SONG & HEART BURST LOGIC ---
+    const burstEmojis = ['💗', '✨', '💕', '🌸', '💖', '🐾', '💎', '❤', '🎉'];
+
+    function revealSongAndBurst(btn) {
+        // 1. Force music to play and update state
+        isPlaying = true;
+        localStorage.setItem('musicPlaying', 'true');
+        music.play().then(() => {
+            updateBtn();
+        }).catch(e => console.log("Play blocked:", e));
+
+        // 2. Trigger Heart Burst from button location
+        const rect = btn.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+
+        // Spawn 30 emojis rapidly
+        for(let i=0; i<30; i++) {
+            setTimeout(() => createBurstEmoji(centerX, centerY), i * 30);
+        }
+
+        // 3. Change button state
+        btn.disabled = true;
+        btn.style.opacity = '0';
+        btn.style.transform = 'scale(0)';
+        setTimeout(() => {
+            btn.textContent = "Playing just for you... ❤️";
+            btn.style.opacity = '1';
+            btn.style.transform = 'scale(1)';
+        }, 400);
+
+        // Also keep the bottom emojis falling for extra effect
+        for(let i=0; i<15; i++) {
+            setTimeout(() => createEmoji(), i * 100);
+        }
+    }
+
+    function createBurstEmoji(x, y) {
+        const emoji = document.createElement('div');
+        emoji.className = 'cute-emoji';
+        emoji.textContent = burstEmojis[Math.floor(Math.random() * burstEmojis.length)];
+
+        // Start at button center
+        emoji.style.left = x + 'px';
+        emoji.style.top = y + 'px';
+        emoji.style.fontSize = (Math.random() * 24 + 16) + 'px';
+        emoji.style.transition = 'all 1.5s cubic-bezier(0.1, 0.8, 0.3, 1)';
+        emoji.style.transform = 'translate(-50%, -50%) scale(0.5)';
+        emoji.style.opacity = '1';
+
+        document.body.appendChild(emoji);
+
+        // Calculate random trajectory (upwards and outwards)
+        requestAnimationFrame(() => {
+            const angle = Math.random() * Math.PI * 2;
+            const distance = Math.random() * 200 + 100;
+            const tx = Math.cos(angle) * distance;
+            // Bias heavily upwards (negative Y)
+            const ty = Math.sin(angle) * distance - 150;
+            const rot = Math.random() * 720 - 360;
+
+            emoji.style.transform = `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(1.5) rotate(${rot}deg)`;
+            emoji.style.opacity = '0';
+        });
+
+        // Remove from DOM after animation
+        setTimeout(() => emoji.remove(), 1500);
+    }
+
+    // Background floating emojis
+    function createEmoji() {
+        const emoji = document.createElement('div');
+        emoji.className = 'cute-emoji';
+        emoji.textContent = burstEmojis[Math.floor(Math.random() * burstEmojis.length)];
+        emoji.style.left = Math.random() * 100 + 'vw';
+        emoji.style.top = '100vh';
+        emoji.style.fontSize = (Math.random() * 20 + 16) + 'px';
+        emoji.style.animationDuration = (Math.random() * 4 + 5) + 's';
+        emoji.style.animationName = 'floatUp';
+        document.body.appendChild(emoji);
+        setTimeout(() => emoji.remove(), 9000);
+    }
+    </script>
+</body>
+</html>
